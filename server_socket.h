@@ -1,7 +1,8 @@
-#ifndef CLIENTSOCKET_CLASS
-#define CLIENTSOCKET_CLASS
+#ifndef SERVERSOCKET_CLASS
+#define SERVERSOCKET_CLASS
 
 #include "socket.h"
+#include "socket_exception.h"
 
 class ServerSocket : private Socket{
 public:
@@ -10,7 +11,7 @@ public:
 	~ServerSocket();
 	ServerSocket operator << (std::string);
 	ServerSocket operator >> (std::string);
-	void accept();
+	void accept(ServerSocket&);
 	void close();
 	int fd();
 };

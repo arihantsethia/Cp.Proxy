@@ -28,17 +28,17 @@ ServerSocket ServerSocket::operator << (std::string s){
 	if(!Socket::send(s)){
 		SocketException("Couldn't write to socket.\n");
 	}
-	return this;
+	return *this;
 }
 
-ServerSocket ServerSocket::operator >> (std::string){
+ServerSocket ServerSocket::operator >> (std::string s){
 	if(!Socket::recv(s)){
 		SocketException("Couldn't read from socket.\n");
 	}
-	return this;
+	return *this;
 }
 
-int ClientSocket::fd(){
+int ServerSocket::fd(){
 	return Socket::fd();
 }
 
@@ -48,7 +48,7 @@ void ServerSocket::accept(ServerSocket& _socket){
 	}
 }
 
-void ClientSocket::close(){
+void  ServerSocket::close(){
 	if(!Socket::close()){
 		SocketException("Couldn't close the server socket");
 	}

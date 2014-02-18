@@ -11,6 +11,10 @@ Socket::~Socket(){
 	}
 }
 
+bool Socket::is_valid(){
+	return _sockfd!=-1;
+}
+
 int Socket::fd(){
 	return _sockfd;
 }
@@ -20,7 +24,7 @@ void Socket::fd(int _fd){
 }
 
 bool Socket::create(){
-	_sockfd = socket(PF_NET, SOCK_STREAM, 0);
+	_sockfd = socket(PF_INET, SOCK_STREAM, 0);
 
 	if(!is_valid()) {
 		return false;
@@ -35,7 +39,7 @@ bool Socket::create(){
 	return true;
 }
 
-bool Socket::bind(int){
+bool Socket::bind(int port){
 	if(!is_valid()){
 		return false;
 	}
@@ -44,7 +48,7 @@ bool Socket::bind(int){
 	_addr.sin_port = htons(port);
 	memset(_addr.sin_zero, '\0', sizeof _addr.sin_zero);
 
-	if(::bind(sockfd, (struct sockaddr *)&_addr, sizeof(_addr)) == -1){
+	if(::bind(_sockfd, (struct sockaddr *)&_addr, sizeof(_addr)) == -1){
 		return false;
 	}
 
@@ -60,7 +64,7 @@ bool Socket::connect(int ip, int port){
 	_addr.sin_port = htons(port);
 	_addr.sin_addr.s_addr = ip;
 
-	if(::connect(_sockfd, (sockaddr *)&m_addr, sizeof(_addr)) == -1){
+	if(::connect(_sockfd, (sockaddr *)&_addr, sizeof(_addr)) == -1){
 		return false;
 	}
 
@@ -85,7 +89,7 @@ bool Socket::accept(Socket& child_socket){
 	}
 
 	int addr_size = sizeof(_addr);
-	int temp_fd = accept(_sockfd, (struct sockaddr *)&_addr, &addr_size);
+	int temp_fd = ::accept(_sockfd, (struct sockaddr *)&_addr,(socklen_t *) &addr_size);
 	if(temp_fd == -1){
 		return false;
 	}
@@ -109,7 +113,7 @@ int Socket::recv(std::string& s){
 	}
 
 	char buffer[MAXRECV+1];
-	int status = ::send(_sockfd, msg.c_str(), MAXRECV, 0);
+	int status = ::send(_sockfd, buffer, MAXRECV, 0);
 
 	if(status > 0){
 		s.append(buffer,status);

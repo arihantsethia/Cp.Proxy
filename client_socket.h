@@ -2,6 +2,7 @@
 #define CLIENTSOCKET_CLASS
 
 #include "socket.h"
+#include "socket_exception.h"
 
 class ClientSocket : private Socket{
 public:

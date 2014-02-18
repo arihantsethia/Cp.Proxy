@@ -1,4 +1,4 @@
-#include "server_socket.h"
+#include "client_socket.h"
 
 ClientSocket::ClientSocket(){
 
@@ -21,14 +21,14 @@ ClientSocket ClientSocket::operator << (std::string s){
 	if(!Socket::send(s)){
 		SocketException("Couldn't write to socket.\n");
 	}
-	return this;
+	return *this;
 }
 
-ClientSocket ClientSocket::operator >> (std::string){
+ClientSocket ClientSocket::operator >> (std::string s){
 	if(!Socket::recv(s)){
 		SocketException("Couldn't read from socket.\n");
 	}
-	return this;
+	return *this;
 }
 
 int ClientSocket::fd(){

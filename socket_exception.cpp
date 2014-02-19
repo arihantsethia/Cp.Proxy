@@ -2,9 +2,13 @@
 #include "socket_exception.h"
 
 SocketException::SocketException(std::string s){
-	throw s;
+	message = s;
 }
 
 SocketException::~SocketException(){
 
+}
+
+std::string SocketException::description(){
+	return message;
 }

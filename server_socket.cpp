@@ -31,7 +31,7 @@ ServerSocket ServerSocket::operator << (std::string s){
 	return *this;
 }
 
-ServerSocket ServerSocket::operator >> (std::string s){
+ServerSocket& ServerSocket::operator >> (std::string &s) {
 	if(!Socket::recv(s)){
 		SocketException("Couldn't read from socket.\n");
 	}

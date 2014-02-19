@@ -87,7 +87,7 @@ bool Socket::accept(Socket& child_socket){
 	if(!is_valid()){
 		return false;
 	}
-
+	
 	int addr_size = sizeof(_addr);
 	int temp_fd = ::accept(_sockfd, (struct sockaddr *)&_addr,(socklen_t *) &addr_size);
 	if(temp_fd == -1){
@@ -100,6 +100,11 @@ bool Socket::accept(Socket& child_socket){
 }
 
 int Socket::send(std::string msg){
+
+
+	std::cout<<msg<<std::endl;
+
+
 	if(!is_valid()){
 		return 0;
 	}
@@ -113,10 +118,10 @@ int Socket::recv(std::string& s){
 	}
 
 	char buffer[MAXRECV+1];
-	int status = ::send(_sockfd, buffer, MAXRECV, 0);
+	int status = ::recv(_sockfd, buffer, MAXRECV, 0);
 
 	if(status > 0){
-		s.append(buffer,status);
+		s.assign(buffer,status);
 	}
 
 	return status;
@@ -133,4 +138,3 @@ bool Socket::close(){
 
 	return true;
 }
-

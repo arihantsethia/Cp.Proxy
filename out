@@ -1,0 +1,8 @@
+Cp-Proxy Started
+Listening on Port : 5128
+CONNECT accounts.google.com:443 HTTP/1.1
+Host: accounts.google.com
+Proxy-Connection: keep-alive
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36
+
+

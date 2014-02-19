@@ -10,7 +10,7 @@ public:
 	ServerSocket(int port);
 	~ServerSocket();
 	ServerSocket operator << (std::string);
-	ServerSocket operator >> (std::string);
+	ServerSocket& operator >> ( std::string& );
 	void accept(ServerSocket&);
 	void close();
 	int fd();

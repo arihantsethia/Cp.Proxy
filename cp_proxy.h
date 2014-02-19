@@ -26,13 +26,10 @@
 
 class CpProxy{
 private:
-	ServerSocket *server_socket;
-	ClientSocket *client_socket;
-
-	void connect(ServerSocket *, ClientSocket *);
+	void connect(ServerSocket *);
 
 public:
-	CpProxy();
+	CpProxy(int);
 	~CpProxy();
 };
 

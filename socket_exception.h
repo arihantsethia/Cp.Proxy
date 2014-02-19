@@ -10,6 +10,7 @@ private:
 public:
 	SocketException(std::string);
 	~SocketException();
+	std::string description();
 };
 
 #endif

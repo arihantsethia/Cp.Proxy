@@ -18,6 +18,8 @@ ClientSocket::~ClientSocket(){
 }
 
 ClientSocket ClientSocket::operator << (std::string s){
+
+		std::cout<<s<<std::endl;
 	if(!Socket::send(s)){
 		SocketException("Couldn't write to socket.\n");
 	}

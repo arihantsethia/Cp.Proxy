@@ -11,6 +11,7 @@ SocketException::~SocketException(){
 
 }
 
+//Returns the description of the Exception
 std::string SocketException::description(){
 	return message;
 }

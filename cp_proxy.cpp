@@ -10,8 +10,9 @@ CpProxy::CpProxy(int port){
 	while(1){
 		server.accept(*server_socket);
 		connect(server_socket);
+		std::cout<<"Here\n";
 		(*server_socket).close();
-	}
+	}	
 }
 
 CpProxy::~CpProxy(){
@@ -20,7 +21,7 @@ CpProxy::~CpProxy(){
 
 void CpProxy::connect(ServerSocket *server_socket){
 	ClientSocket *client_socket;
-	std::string buffer="",data="";
+	std::string buffer="",data="",returnData="";
 	char buf[1024];
 	while(1){
 		try{
@@ -34,15 +35,14 @@ void CpProxy::connect(ServerSocket *server_socket){
 			break;
 		}
 	}
-	std::cout<<data<<std::endl;
-	int returnCode = isvalidheader(data);
-	if(returnCode!=404 || returnCode!=500){
-		std::string host,r_url;
-		int urlPort;
-		parseheader(data,host,r_url,urlPort);
-		data = convertheader(data);//,host,r_url,urlPort);
-		std::cout<<hostlookup(host)<<std::endl;
+	std::string host,r_url;
+	int urlPort;
+	int returnCode = parseheader(data,host,r_url,urlPort);
+	if(returnCode==200){
+		data = convertheader(data,host,r_url,urlPort);//,host,r_url,urlPort);
+		std::cout<<"Data : "<<data<<"\n URL :"<<r_url<<"\n Host:" << host<<std::endl;
 		client_socket = new ClientSocket(hostlookup(host),urlPort);
+		std::cout<<"Here Before sending data\n";
 		(*client_socket)<<data;
 		while(1){
 			buffer = "";
@@ -52,9 +52,18 @@ void CpProxy::connect(ServerSocket *server_socket){
 				std::cout<<"Exception occurred : "<<e.description()<<std::endl;
 				break;
 			}
+			if(!buffer.length()){
+				break;
+			}
 			std::cout<<buffer<<std::endl;
+			(*server_socket)<<buffer;
 		}
+	} else if(returnCode == 404){
+		std::cout<<"ILL Formed Request"<<std::endl;
+		std::cout<<"Data : "<<data<<std::endl;
+	} else if(returnCode == 500){
+		std::cout<<"Not Implemented Request"<<std::endl;
 	}
-
-
+	(*client_socket).close();
+	return;
 }

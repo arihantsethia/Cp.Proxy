@@ -100,11 +100,6 @@ bool Socket::accept(Socket& child_socket){
 }
 
 int Socket::send(std::string msg){
-
-
-	std::cout<<msg<<std::endl;
-
-
 	if(!is_valid()){
 		return 0;
 	}

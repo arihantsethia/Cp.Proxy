@@ -24,14 +24,14 @@ ServerSocket::~ServerSocket(){
 
 }
 
-ServerSocket ServerSocket::operator << (std::string s){
+ServerSocket& ServerSocket::operator << (std::string& s){
 	if(!Socket::send(s)){
 		SocketException("Couldn't write to socket.\n");
 	}
 	return *this;
 }
 
-ServerSocket& ServerSocket::operator >> (std::string &s) {
+ServerSocket& ServerSocket::operator >> (std::string& s) {
 	if(!Socket::recv(s)){
 		SocketException("Couldn't read from socket.\n");
 	}

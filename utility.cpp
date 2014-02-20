@@ -37,10 +37,28 @@ std::string geturl(std::string hdr, std::vector<std::string> tokens){
 	}
 	return "-1";
 }
-/*
-std::string convertheader(std::string s){
 
-}*/
+std::string convertheader(std::string hdr, std::string host, std::string r_url, int port){
+	std::string sep = "\r\n";
+	std::string cHdr = "";
+	std::string a_url ="";
+	std::string temp;
+	std::vector<std::string> tokens = tokenize(hdr,sep);
+	std::vector<std::string>::iterator it;
+	a_url= geturl(hdr,tokens);
+	for(it=tokens.begin();it!=tokens.end();it++){
+		temp = *it;
+		if((*it).find("GET ",0) !=std::string::npos){
+			temp = temp.replace(temp.find(a_url),a_url.length(),r_url);
+			temp = temp + "\r\n" + "Host: "+host;
+		}
+		if((*it).find("Proxy",0)==std::string::npos || (*it).find("Host",0)==std::string::npos ){
+			cHdr += temp + "\r\n";
+		}
+	}
+	cHdr += "\r\n";
+	return cHdr;
+}
 
 int hostlookup(std::string h){
 	const char *host = h.c_str();
@@ -60,7 +78,7 @@ int hostlookup(std::string h){
 		}
 		if (hostp->h_addrtype != AF_INET){ 
 			errno = EPROTOTYPE;
-			return(-1);
+			return -1;
 		}
 		memcpy((char * ) &inaddr.sin_addr, (char * ) hostp->h_addr, sizeof(inaddr.sin_addr));
 	}
@@ -68,24 +86,30 @@ int hostlookup(std::string h){
 	return(inaddr.sin_addr.s_addr);
 }
 
-void parseheader(std::string data, std::string& host, std::string &r_url, int& port){
+int parseheader(std::string data, std::string& host, std::string &r_url, int& port){
 	// "\r\n" = <CR><LF> is defined as line break in the protocol specification (RFC1945) 
 	std::string::size_type pos;
 	std::string sep = "\r\n";
 	std::vector<std::string> tokens = tokenize(data,sep);
 	std::string url = geturl(data,tokens);
 	host = gethostname(data,tokens);
+	if(!url.compare("-1")){
+		return 501;
+	}else if(!url.compare("-2")){
+		return 501;
+	}
 	if(!host.compare("-1")){
 		pos = url.find("http://",0);
-		if(pos!=std::string::npos){
-			host = url.substr(7,(url.find("/",7)-7));
+		std::string::size_type ePos = url.find("/",pos+7);
+		if(pos!=std::string::npos && ePos!=std::string::npos){
+			host = url.substr(7,(ePos-7));
 		}else{
-			return ; 
+			return 404; 
 		}
 	}
 	pos = url.find("http://",0);
 	if(pos!=std::string::npos){
-		r_url = url.substr(url.find("/",7));
+		r_url = url.substr(url.find("/",pos+7));
 	}else{
 		r_url = url;
 	}
@@ -96,12 +120,9 @@ void parseheader(std::string data, std::string& host, std::string &r_url, int& p
 	}else{
 		 port = 80;
 	}
-}
-
-int isvalidheader(std::string data){
 	return 200;
 }
-
+/*
 std::string convertheader(std::string hdr)
 {
 
@@ -145,3 +166,4 @@ std::string convertheader(std::string hdr)
   
   return ret;
 }
+*/

@@ -17,9 +17,8 @@
 
 std::vector<std::string> tokenize(std::string, std::string);
 std::string gethostname(std::string);
-std::string convertheader(std::string);
-int isvalidheader(std::string);
+std::string convertheader(std::string, std::string, std::string, int);
 int hostlookup(std::string h);
-void parseheader(std::string, std::string&, std::string&, int&);
+int parseheader(std::string, std::string&, std::string&, int&);
 
 #endif

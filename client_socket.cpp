@@ -17,16 +17,14 @@ ClientSocket::~ClientSocket(){
 
 }
 
-ClientSocket ClientSocket::operator << (std::string s){
-
-		std::cout<<s<<std::endl;
+ClientSocket& ClientSocket::operator << (std::string& s){
 	if(!Socket::send(s)){
 		SocketException("Couldn't write to socket.\n");
 	}
 	return *this;
 }
 
-ClientSocket ClientSocket::operator >> (std::string s){
+ClientSocket& ClientSocket::operator >> (std::string& s){
 	if(!Socket::recv(s)){
 		SocketException("Couldn't read from socket.\n");
 	}

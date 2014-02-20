@@ -9,8 +9,8 @@ public:
 	ClientSocket();
 	ClientSocket(int ip, int port);
 	~ClientSocket();
-	ClientSocket operator << (std::string);
-	ClientSocket operator >> (std::string);
+	ClientSocket& operator << (std::string&);
+	ClientSocket& operator >> (std::string&);
 	void close();
 	int fd();
 };

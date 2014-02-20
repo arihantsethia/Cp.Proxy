@@ -1,3 +1,5 @@
+//  Socket class file which provides wrapper functions to socket functions. 
+
 #include "socket.h"
 
 Socket::Socket(){

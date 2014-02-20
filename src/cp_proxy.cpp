@@ -71,6 +71,7 @@ void CpProxy::connect(ServerSocket *server_socket){
 		}
 		(*client_socket).close();
 	} else if(returnCode == 400){
+		std::cout<<"Bad Request\n"<<data<<std::endl;
 		buffer = "HTTP/1.0 400 Bad Request\r\nContent-Type: text/html\r\nConnection: close";
 		buffer =buffer + "Content-Type: text/html;\r\ncharset=iso-8859-1\r\n"\
 				+"<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"><html><head><title>400 Bad Request</title></head>"\
@@ -78,6 +79,7 @@ void CpProxy::connect(ServerSocket *server_socket){
 				+"<p>The request line contained invalid characters following the protocol string.</p></p></body></html>";
 		(*server_socket)<<buffer;
 	} else if(returnCode == 501){
+		std::cout<<"Method Not Implemented\n"<<data<<std::endl;
 		buffer = "HTTP/1.0 501 Method Not Implemented\r\nContent-Type: text/html\r\nConnection: close";
 		buffer= buffer +"Content-Type: text/html;\r\ncharset=iso-8859-1\r\n"\
 				+"<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"><html><head><title>501 Method Not Implemented</title></head>"\

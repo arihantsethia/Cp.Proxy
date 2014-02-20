@@ -1,3 +1,5 @@
+// Contains functions that help in parsing the HTTP/1.0 Header.
+
 #include "utility.h"
 
 std::vector<std::string> tokenize(std::string s, std::string sep){

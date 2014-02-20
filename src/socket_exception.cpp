@@ -1,3 +1,5 @@
+// Class file for various Socket Exceptions
+
 #include <string>
 #include "socket_exception.h"
 

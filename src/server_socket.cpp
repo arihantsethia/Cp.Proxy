@@ -1,3 +1,5 @@
+// Class file of Server Socket 
+
 #include "server_socket.h"
 
 ServerSocket::ServerSocket(){

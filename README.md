@@ -22,7 +22,7 @@ To use telnet:
 
 Important Points to Remember
 ============================
-<br>
+
 Configuring Mozilla Firefox to use HTTP/1.0 instead of HTTP/1.1
 ---------------------------------------------------------------
 

@@ -31,8 +31,15 @@ std::string geturl(std::string hdr, std::vector<std::string> tokens){
 	for(it=tokens.begin();it!=tokens.end();it++){
 		std::string::size_type pos = (*it).find("GET ",0);
 		if(pos!=std::string::npos){
-			std::string::size_type endPos = (*it).find("/ ",pos);
-			return (*it).substr(4,endPos-3);
+			pos = pos+4;
+			while(isspace((*it)[pos])){
+				pos++;
+			}
+			std::string::size_type endPos = (*it).find(" ",pos);
+			if(endPos==std::string::npos){
+				return "-2";
+			}
+			return (*it).substr(pos,endPos-pos);
 		}
 	}
 	return "-1";
@@ -52,7 +59,7 @@ std::string convertheader(std::string hdr, std::string host, std::string r_url, 
 			temp = temp.replace(temp.find(a_url),a_url.length(),r_url);
 			temp = temp + "\r\n" + "Host: "+host;
 		}
-		if((*it).find("Proxy",0)==std::string::npos || (*it).find("Host",0)==std::string::npos ){
+		if((*it).find("Proxy",0)==std::string::npos && (*it).find("Host",0)==std::string::npos ){
 			cHdr += temp + "\r\n";
 		}
 	}
@@ -73,16 +80,14 @@ int hostlookup(std::string h){
 
 	if ((int)(inaddr.sin_addr.s_addr = inet_addr(host)) == -1){
 		if ((hostp = gethostbyname(host)) == NULL){
-			errno = EINVAL;
-			return -1;
+			throw SocketException(strerror(errno));
 		}
 		if (hostp->h_addrtype != AF_INET){ 
 			errno = EPROTOTYPE;
-			return -1;
+			throw SocketException(strerror(errno));
 		}
 		memcpy((char * ) &inaddr.sin_addr, (char * ) hostp->h_addr, sizeof(inaddr.sin_addr));
 	}
-	
 	return(inaddr.sin_addr.s_addr);
 }
 
@@ -122,48 +127,3 @@ int parseheader(std::string data, std::string& host, std::string &r_url, int& po
 	}
 	return 200;
 }
-/*
-std::string convertheader(std::string hdr)
-{
-
-  std::string ret="";
-  std::string host;
-  std::vector <std::string> tokens;
-  tokens =tokenize(hdr,  "\r\n");
-
-  std::vector<std::string>::iterator it;
-  for( it = tokens.begin(); it != tokens.end(); ++it)
-  {
-
-    if( it->find("Host:", 0) == 0 )
-    {
-      host = it->substr(6);
-    }
-    
-  }
-  
-  
-
-  for( it = tokens.begin(); it != tokens.end(); ++it)
-  {
-    if( it->find( "GET", 0) == 0)
-    {
-
-      std::string temp = *it;
-      host = "http://" + host;
-      int location = temp.find(host,0);
-      int length = host.length();
-      temp = temp.replace( location, length, "" );
-      ret += temp + "\r\n";
-
-    }
-    else if( it->find( "Proxy", 0) != 0 )
-    {
-      ret += *it + "\r\n";
-    }
-  }
-  ret += "\r\n";
-  
-  return ret;
-}
-*/

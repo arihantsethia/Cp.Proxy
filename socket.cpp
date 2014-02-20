@@ -101,7 +101,7 @@ bool Socket::accept(Socket& child_socket){
 
 int Socket::send(std::string msg){
 	if(!is_valid()){
-		return 0;
+		return -1;
 	}
 
 	return ::send(_sockfd, msg.c_str(), msg.length(), 0);

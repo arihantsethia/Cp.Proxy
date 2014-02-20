@@ -3,16 +3,25 @@
 
 CpProxy::CpProxy(int port){
 	std::cout<<"Cp-Proxy Started\n";
-	ServerSocket server(port);
+	ServerSocket server(port);	
+	ServerSocket *server_socket;
 	std::cout<<"Listening on Port : "<<port<<std::endl;
-	ServerSocket *server_socket ;
-	server_socket= new ServerSocket();
+	try{
+		server_socket = new ServerSocket();
+	} catch(SocketException &e){
+		std::cout<<"Exception occurred : "<<e.description()<<std::endl;
+		return ;
+	}
 	while(1){
-		server.accept(*server_socket);
-		connect(server_socket);
-		std::cout<<"Here\n";
-		(*server_socket).close();
-	}	
+		try{
+			server.accept(*server_socket);
+			connect(server_socket);
+			(*server_socket).close();
+		} catch(SocketException &e){
+			std::cout<<"Exception occurred : "<<e.description()<<std::endl;
+			continue ;
+		}
+	}
 }
 
 CpProxy::~CpProxy(){
@@ -22,7 +31,6 @@ CpProxy::~CpProxy(){
 void CpProxy::connect(ServerSocket *server_socket){
 	ClientSocket *client_socket;
 	std::string buffer="",data="",returnData="";
-	char buf[1024];
 	while(1){
 		try{
 			*server_socket >> buffer;
@@ -31,7 +39,7 @@ void CpProxy::connect(ServerSocket *server_socket){
 			return ; 
 		}
 		data += buffer;
-		if(buffer.find("\r\n",buffer.length()-2) != std::string::npos){
+		if(buffer.length()==0 || buffer.find("\r\n",buffer.length()-2) != std::string::npos){
 			break;
 		}
 	}
@@ -39,31 +47,34 @@ void CpProxy::connect(ServerSocket *server_socket){
 	int urlPort;
 	int returnCode = parseheader(data,host,r_url,urlPort);
 	if(returnCode==200){
-		data = convertheader(data,host,r_url,urlPort);//,host,r_url,urlPort);
-		std::cout<<"Data : "<<data<<"\n URL :"<<r_url<<"\n Host:" << host<<std::endl;
-		client_socket = new ClientSocket(hostlookup(host),urlPort);
-		std::cout<<"Here Before sending data\n";
-		(*client_socket)<<data;
+		data = convertheader(data,host,r_url,urlPort);
+		std::cout<<"Data : \n"<<data<<"\n URL :"<<r_url<<"\n Host:" << host<<std::endl;
+		try{
+			int ip = hostlookup(host);
+			client_socket = new ClientSocket(ip,urlPort);
+			(*client_socket)<<data;
+		} catch(SocketException& e){
+			std::cout<<"Exception occurred : "<<e.description()<<std::endl;
+			return;
+		}
 		while(1){
 			buffer = "";
 			try{
 				(*client_socket)>>buffer;
+				if(!buffer.length()){
+					break;
+				}
+				(*server_socket)<<buffer;
 			}catch(SocketException& e){
 				std::cout<<"Exception occurred : "<<e.description()<<std::endl;
 				break;
-			}
-			if(!buffer.length()){
-				break;
-			}
-			std::cout<<buffer<<std::endl;
-			(*server_socket)<<buffer;
+			}			
 		}
 	} else if(returnCode == 404){
 		std::cout<<"ILL Formed Request"<<std::endl;
-		std::cout<<"Data : "<<data<<std::endl;
-	} else if(returnCode == 500){
+	} else if(returnCode == 501){
 		std::cout<<"Not Implemented Request"<<std::endl;
 	}
-	(*client_socket).close();
+	//(*client_socket).close();
 	return;
 }

@@ -8,12 +8,13 @@
 #include <string>
 #include <algorithm>
 #include <vector>
-#include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+
+#include "socket_exception.h"
 
 std::vector<std::string> tokenize(std::string, std::string);
 std::string gethostname(std::string);

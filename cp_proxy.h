@@ -4,8 +4,6 @@
 #include <cstdlib>
 #include <cctype>
 #include <cstring>
-#include <csignal>
-#include <cerrno>
 #include <cstdio>
 #include <iostream>
 #include <string>

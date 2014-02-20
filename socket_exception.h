@@ -2,6 +2,7 @@
 #define SOCKETEXCEPTION_CLASS
 
 #include <string>
+#include <cerrno>
 
 class SocketException {
 private:

@@ -6,27 +6,27 @@ ClientSocket::ClientSocket(){
 
 ClientSocket::ClientSocket(int ip, int port){
 	if(!Socket::create()){
-		SocketException("Client socket could not be created.\n");
+		throw SocketException(strerror(errno));
 	}
 	if(!Socket::connect(ip,port)){
-		SocketException("Socket couldn't connect to the host.");
+		throw SocketException(strerror(errno));
 	}
 }
 
 ClientSocket::~ClientSocket(){
-
+	Socket::close();
 }
 
 ClientSocket& ClientSocket::operator << (std::string& s){
-	if(!Socket::send(s)){
-		SocketException("Couldn't write to socket.\n");
+	if(Socket::send(s)==-1){
+		throw SocketException(strerror(errno));
 	}
 	return *this;
 }
 
 ClientSocket& ClientSocket::operator >> (std::string& s){
-	if(!Socket::recv(s)){
-		SocketException("Couldn't read from socket.\n");
+	if(Socket::recv(s)==-1){
+		throw SocketException(strerror(errno));
 	}
 	return *this;
 }
@@ -37,6 +37,6 @@ int ClientSocket::fd(){
 
 void ClientSocket::close(){
 	if(!Socket::close()){
-		SocketException("Couldn't close the client socket.");
+		throw SocketException(strerror(errno));
 	}
 }

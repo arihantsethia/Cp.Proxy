@@ -36,7 +36,7 @@ std::string geturl(std::string hdr, std::vector<std::string> tokens){
 				pos++;
 			}
 			std::string::size_type endPos = (*it).find(" ",pos);
-			std::string::size_type hPos = (*it).find("HTTP/1.0",endPos);
+			std::string::size_type hPos = (*it).find("HTTP/1.1",endPos);
 			if(endPos==std::string::npos || hPos==std::string::npos){
 				return "-2";
 			}

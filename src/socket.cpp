@@ -2,29 +2,35 @@
 
 #include "socket.h"
 
+//Constructor function which intializes _addr to 0 and sets _sockfd to -1
 Socket::Socket(){
 	memset(&_addr, 0, sizeof _addr);
 	_sockfd = -1;
 }
 
+//Destructor function
 Socket::~Socket(){
 	if(is_valid()){
 		close();
 	}
 }
 
+//Checks for a valid _sockfd i.e != -1
 bool Socket::is_valid(){
 	return _sockfd!=-1;
 }
 
+//Return the _sockfd
 int Socket::fd(){
 	return _sockfd;
 }
 
+//Allows to set _sockfd
 void Socket::fd(int _fd){
 	_sockfd = _fd;
 }
 
+//Wrapper function for socket(int domain, int type, int protocol);
 bool Socket::create(){
 	_sockfd = socket(PF_INET, SOCK_STREAM, 0);
 
@@ -41,6 +47,7 @@ bool Socket::create(){
 	return true;
 }
 
+//Wrapper function for bind(int sockfd, struct sockaddr *my_addr, socklen_t addrlen);
 bool Socket::bind(int port){
 	if(!is_valid()){
 		return false;
@@ -57,6 +64,7 @@ bool Socket::bind(int port){
 	return true;
 }
 
+//Wrapper function for connect(int sockfd, const struct sockaddr *serv_addr,socklen_t addrlen);
 bool Socket::connect(int ip, int port){
 	if(!is_valid()){
 		return false;
@@ -73,6 +81,7 @@ bool Socket::connect(int ip, int port){
 	return true;
 }
 
+//Wrapper function for listen(int s, int backlog);
 bool Socket::listen(){
 	if(!is_valid()){
 		return false;
@@ -85,6 +94,7 @@ bool Socket::listen(){
 	return true;
 }
 
+//Wrapper function for accept(int s, struct sockaddr *addr, socklen_t *addrlen);
 bool Socket::accept(Socket& child_socket){
 	if(!is_valid()){
 		return false;
@@ -101,14 +111,16 @@ bool Socket::accept(Socket& child_socket){
 	return true;
 }
 
+//Wrapper function for send(int s, const void *buf, size_t len, int flags);
 int Socket::send(std::string msg){
 	if(!is_valid()){
 		return -1;
 	}
 	
-	return ::send(_sockfd, msg.c_str(), msg.length(), MSG_NOSIGNAL);
+	return ::send(_sockfd, msg.c_str(), msg.length(), MSG_NOSIGNAL); //Set flags to MSG_SIGNAL to IGNORE Broken Pipe Errors.
 }
 
+//Wrapper function for recv(int s, void *buf, size_t len, int flags);
 int Socket::recv(std::string& s){
 	if(!is_valid()){
 		return -1;
@@ -124,6 +136,7 @@ int Socket::recv(std::string& s){
 	return status;
 }
 
+//Wrapper function for close(int s);
 bool Socket::close(){
 	if(!is_valid()){
 		return true;

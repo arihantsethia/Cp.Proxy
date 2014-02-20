@@ -18,8 +18,8 @@
 
 std::vector<std::string> tokenize(std::string, std::string);
 std::string gethostname(std::string);
-std::string convertheader(std::string, std::string, std::string, int);
+std::string convertheader(std::string, std::string, std::string, std::string);
 int hostlookup(std::string h);
-int parseheader(std::string, std::string&, std::string&, int&);
+int parseheader(std::string, std::string&, std::string&, std::string&);
 
 #endif

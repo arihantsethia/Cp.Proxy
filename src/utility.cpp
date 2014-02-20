@@ -46,7 +46,7 @@ std::string geturl(std::string hdr, std::vector<std::string> tokens){
 	return "-1";
 }
 
-std::string convertheader(std::string hdr, std::string host, std::string r_url, int port){
+std::string convertheader(std::string hdr, std::string host, std::string r_url, std::string port){
 	std::string sep = "\r\n";
 	std::string cHdr = "";
 	std::string a_url ="";
@@ -58,7 +58,7 @@ std::string convertheader(std::string hdr, std::string host, std::string r_url, 
 		temp = *it;
 		if((*it).find("GET ",0) !=std::string::npos){
 			temp = temp.replace(temp.find(a_url),a_url.length(),r_url);
-			temp = temp + "\r\n" + "Host: "+host;
+			temp = temp + "\r\n" + "Host: "+host+":"+port;
 		}
 		if((*it).find("Proxy",0)==std::string::npos && (*it).find("Host",0)==std::string::npos ){
 			cHdr += temp + "\r\n";
@@ -92,7 +92,7 @@ int hostlookup(std::string h){
 	return(inaddr.sin_addr.s_addr);
 }
 
-int parseheader(std::string data, std::string& host, std::string &r_url, int& port){
+int parseheader(std::string data, std::string& host, std::string &r_url, std::string& port){
 	// "\r\n" = <CR><LF> is defined as line break in the protocol specification (RFC1945) 
 	std::string::size_type pos;
 	std::string sep = "\r\n";
@@ -102,7 +102,7 @@ int parseheader(std::string data, std::string& host, std::string &r_url, int& po
 	if(!url.compare("-1")){
 		return 501;
 	}else if(!url.compare("-2")){
-		return 404;
+		return 400;
 	}
 	if(!host.compare("-1")){
 		pos = url.find("http://",0);
@@ -110,7 +110,7 @@ int parseheader(std::string data, std::string& host, std::string &r_url, int& po
 		if(pos!=std::string::npos && ePos!=std::string::npos){
 			host = url.substr(7,(ePos-7));
 		}else{
-			return 404; 
+			return 400; 
 		}
 	}
 	pos = url.find("http://",0);
@@ -121,10 +121,10 @@ int parseheader(std::string data, std::string& host, std::string &r_url, int& po
 	}
 	pos = host.find(":",0);
 	if(pos!=std::string::npos){
-		port = atoi(host.substr(pos+1).c_str());
+		port = host.substr(pos+1);
 		host = host.substr(0,pos);
 	}else{
-		 port = 80;
+		 port = "80";
 	}
 	return 200;
 }

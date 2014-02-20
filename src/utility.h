@@ -17,7 +17,8 @@
 #include "socket_exception.h"
 
 std::vector<std::string> tokenize(std::string, std::string);
-std::string gethostname(std::string);
+std::string gethostname(std::vector<std::string>);
+std::string geturl(std::vector<std::string>);
 std::string convertheader(std::string, std::string, std::string, std::string);
 int hostlookup(std::string h);
 int parseheader(std::string, std::string&, std::string&, std::string&);

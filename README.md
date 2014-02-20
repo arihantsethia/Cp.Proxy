@@ -34,6 +34,7 @@ Type 'about:config' in the title bar.
 In the search/filter bar, type 'network.http.proxy'
 You should see three keys: network.http.proxy.keepalive, network.http.proxy.pipelining, and network.http.proxy.version.
 Set keepalive to false. Set version to 1.0. Make sure that pipelining is set to false.
+Restart Firefox.
 
 
 How to Run Cp-Proxy

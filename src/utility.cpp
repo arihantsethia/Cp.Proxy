@@ -83,7 +83,7 @@ std::string convertheader(std::string hdr, std::string host, std::string r_url, 
 	std::string temp;
 	std::vector<std::string> tokens = tokenize(hdr,sep);
 	std::vector<std::string>::iterator it;
-	a_url= geturl(hdr,tokens);
+	a_url= geturl(tokens);
 	for(it=tokens.begin();it!=tokens.end();it++){
 		temp = *it;
 		if((*it).find("GET ",0) !=std::string::npos){

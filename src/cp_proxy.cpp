@@ -47,7 +47,7 @@ void CpProxy::connect(ServerSocket *server_socket){
 	int returnCode = parseheader(data,host,r_url,urlPort);
 	if(returnCode==200){
 		data = convertheader(data,host,r_url,urlPort);
-		std::cout<<data<<"\nUrl :"<<r_url<<"\nHost:" << host<<std::endl;
+		std::cout<<"\nUrl :"<<r_url<<"\nHost:" << host<<std::endl;
 		try{
 			int ip = hostlookup(host);
 			client_socket = new ClientSocket(ip,atoi(urlPort.c_str()));
@@ -69,8 +69,6 @@ void CpProxy::connect(ServerSocket *server_socket){
 				break;
 			}			
 		}
-
-		std::cout<<"here\n";
 		(*client_socket).close();
 	} else if(returnCode == 400){
 		buffer = "HTTP/1.0 400 Bad Request\r\nContent-Type: text/html\r\nConnection: close";

@@ -103,8 +103,8 @@ int Socket::send(std::string msg){
 	if(!is_valid()){
 		return -1;
 	}
-
-	return ::send(_sockfd, msg.c_str(), msg.length(), 0);
+	
+	return ::send(_sockfd, msg.c_str(), msg.length(), MSG_NOSIGNAL);
 }
 
 int Socket::recv(std::string& s){
@@ -112,7 +112,7 @@ int Socket::recv(std::string& s){
 		return -1;
 	}
 
-	char buffer[MAXRECV+1];
+	char buffer[MAXRECV+5];
 	int status = ::recv(_sockfd, buffer, MAXRECV, 0);
 
 	if(status > 0){

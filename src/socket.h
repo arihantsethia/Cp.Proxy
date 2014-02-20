@@ -12,7 +12,7 @@
 #include <netinet/in.h>
 
 #define BACKLOG 20
-#define MAXRECV	1024
+#define MAXRECV	2048
 
 class Socket{
 private:

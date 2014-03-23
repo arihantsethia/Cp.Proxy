@@ -48,7 +48,7 @@ void CpProxy::connect(ServerSocket *server_socket){
 			return ; 
 		}
 		data += buffer;
-		if(buffer.length()==0 || buffer.find("\r\n",buffer.length()-2) != std::string::npos){
+		if(data.find("\r\n\r\n")!=std::string::npos){
 			break;
 		}
 	}
